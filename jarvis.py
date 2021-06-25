@@ -1,6 +1,10 @@
 import speech_recognition as sr # this package will recognize the voice command
 import pyttsx3 # this package will convert text-to-speech
 import pywhatkit # this package can search and play videos on youtube following the voice command
+import datetime
+import wikipedia
+import requests, json , sys
+import pyjokes
 
 listener = sr.Recognizer() # creating a speech recognizer to recognize the voice of the user
 engine = pyttsx3.init() # initializing the text-to-speech engine
@@ -8,6 +12,22 @@ engine = pyttsx3.init() # initializing the text-to-speech engine
 def talk(text):
     engine.say(text)
     engine.runAndWait()
+
+def weather(city): #weather used openweathermap api take city name as input
+    # API key
+    api_key = "e109b74f2efd786c4194d0efb32c9211"
+    # base_url variable to store url
+    base_url = "http://api.openweathermap.org/data/2.5/weather?"
+    # city name
+    city_name = city
+
+    complete_url = base_url + "appid=" + api_key + "&q=" + city_name
+    response = requests.get(complete_url)
+    x = response.json()
+    if x["cod"] != "404":
+        y = x["main"]
+        current_temperature = y["temp"]
+        return str(current_temperature)
 
 def take_command():
     try:
@@ -32,4 +52,27 @@ def run_jarvis():
         talk('playing' + ytvideo)
         pywhatkit.playonyt(ytvideo)
 
-run_jarvis()
+
+    if 'time' in command: #speck date & time
+            time  = datetime.datetime.now().strftime('%I:%M %p')
+            print(time)
+            talk('Current time is ' + time)
+
+    elif 'tell me about' in command: #read from wikipedia used wikipedia library
+            look_for = command.replace('tell me about', '')
+            info = wikipedia.summary(look_for, 1)
+            print(info)
+            talk(info)
+
+    elif 'weather' in command: #weather In location
+            weather_api = weather('Sylhet') #pass city name in weather api function
+            talk(weather_api + 'degree fahreneit')
+
+    elif 'joke' in command:  # tell jokes used pyjokes library
+        talk(pyjokes.get_joke())
+
+    else:
+        talk('I did not get it but I am going to search it for you') #search at google used pywhatkit library
+        pywhatkit.search(command)
+while True:     #run alexa continuously -> take command from user one after another
+    run_jarvis()
