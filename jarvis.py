@@ -38,7 +38,7 @@ def take_command():
             command = command.lower() # keeping the command in lowercase
         if 'jarvis' in command: # this block will run if the command contains the word "jarvis"
             command = command.replace('jarvis', '') # we are replacing the word jarvis with an empty string so that it doesn't show up in the command
-            print(command) # the text we got from google API converter will be printed so we can check whether jarvis got the right command or not
+            talk(command) # jarvis will say out loud the text we got from google API converter
 
     except: # if the command doesn't include the word "jarvis", then this block will run
         pass # we are going to ignore this block
