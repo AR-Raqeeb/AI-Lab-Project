@@ -46,14 +46,12 @@ def take_command():
 
 def run_jarvis():
     command = take_command()
-    print(command)
     if 'play' in command:
         ytvideo = command.replace('play', '')
         talk('playing' + ytvideo)
         pywhatkit.playonyt(ytvideo)
 
-
-    if 'time' in command: #speck date & time
+    if 'time' in command: #speak date & time
             time  = datetime.datetime.now().strftime('%I:%M %p')
             print(time)
             talk('Current time is ' + time)
@@ -69,7 +67,7 @@ def run_jarvis():
             talk(weather_api + 'degree fahreneit')
 
     elif 'joke' in command:  # tell jokes used pyjokes library
-        talk(pyjokes.get_joke())
+            talk(pyjokes.get_joke())
 
     else:
         talk('I did not get it but I am going to search it for you') #search at google used pywhatkit library
